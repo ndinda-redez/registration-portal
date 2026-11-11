@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swahilipot Digital Registration System</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<div class="app">
+
+<aside class="sidebar">
+ <div class="brand">
+  <div class="brand-icon">✦</div>
+  <h2>SWAHILIPOT HUB</h2>
+  <p>DIGITAL REGISTRATION PORTAL</p>
+ </div>
+
+ <div class="nav-title">MAIN MENU</div>
+ <nav class="nav">
+  <button class="active" data-page="dashboard"><span class="nav-icon">▦</span>Dashboard</button>
+  <button data-page="visitors"><span class="nav-icon">♙</span>Visitors</button>
+  <button data-page="registration"><span class="nav-icon">＋</span>New Registration</button>
+  <button data-page="reports"><span class="nav-icon">▤</span>Reports</button>
+  <button data-page="settings"><span class="nav-icon">⚙</span>Settings</button>
+ </nav>
+
+ <div class="sidebar-bottom">
+  <strong>Swahilipot Hub</strong><br>
+  Visitor Management System<br>
+  Version 2.0 | 2026
+ </div>
+</aside>
+
+<main class="main">
+ <header class="topbar">
+  <h3 id="topTitle">Dashboard Overview</h3>
+  <div class="top-right">
+   <span class="date-label" id="currentDate"></span>
+   <div class="admin">
+    <div class="avatar">A</div>
+    <span>Administrator</span>
+   </div>
+  </div>
+ </header>
+
+ <div class="content">
+
+ <!-- DASHBOARD -->
+ <section id="dashboard" class="page">
+  <div class="page-heading">
+   <div>
+    <h1>Dashboard Overview</h1>
+    <p>Welcome back! Here is your visitor activity summary.</p>
+   </div>
+   <button class="primary" onclick="showPage('registration')">＋ Register Visitor</button>
+  </div>
+
+  <div class="stats">
+   <div class="stat">
+    <div class="stat-top"><span class="stat-label">Total Visitors</span><span class="stat-icon">♙</span></div>
+    <h2 id="total">0</h2><small>All registered visitors</small>
+   </div>
+   <div class="stat">
+    <div class="stat-top"><span class="stat-label">Today's Visitors</span><span class="stat-icon">▣</span></div>
+    <h2 id="today">0</h2><small>Registrations today</small>
+   </div>
+   <div class="stat">
+    <div class="stat-top"><span class="stat-label">Currently Inside</span><span class="stat-icon">↗</span></div>
+    <h2 id="inside">0</h2><small>Active check-ins</small>
+   </div>
+   <div class="stat">
+    <div class="stat-top"><span class="stat-label">Checked Out</span><span class="stat-icon">✓</span></div>
+    <h2 id="checked">0</h2><small>Completed visits</small>
+   </div>
+  </div>
+
+  <div class="grid-two">
+   <div class="panel">
+    <div class="panel-head">
+     <div><h3>Weekly Visitor Statistics</h3><p>Visitor registrations over the last seven days</p></div>
+     <span class="badge in">LIVE DATA</span>
+    </div>
+    <div class="chart" id="chart"></div>
+    <p class="chart-note">Statistics are calculated from the saved visitor records.</p>
+   </div>
+
+   <div class="panel">
+    <div class="panel-head"><div><h3>Recent Activity</h3><p>Latest visitor registrations</p></div></div>
+    <div class="activity-list" id="activity"></div>
+   </div>
+  </div>
+
+  <div class="panel table-panel">
+   <div class="panel-head">
+    <div><h3>Recent Visitors</h3><p>Latest registered visitors</p></div>
+    <button class="secondary" onclick="showPage('visitors')">View All Visitors →</button>
+   </div>
+   <div class="table-wrap">
+    <table>
+     <thead><tr><th>Visitor</th><th>Organization</th><th>Purpose</th><th>Date</th><th>Status</th></tr></thead>
+     <tbody id="recentTable"></tbody>
+    </table>
+   </div>
+  </div>
+ </section>
+
+ <!-- VISITORS -->
+ <section id="visitors" class="page hidden">
+  <div class="page-heading">
+   <div><h1>Visitor Records</h1><p>View, search and manage registered visitors.</p></div>
+   <button class="primary" onclick="showPage('registration')">＋ Add Visitor</button>
+  </div>
+  <div class="panel table-panel">
+   <div class="toolbar">
+    <input id="search" placeholder="Search name, phone or organization...">
+    <select id="filter">
+     <option value="All">All Statuses</option>
+     <option value="Checked In">Checked In</option>
+     <option value="Checked Out">Checked Out</option>
+    </select>
+    <button class="secondary" onclick="exportCSV()">↓ Export CSV</button>
+   </div>
+   <div class="table-wrap">
+    <table>
+     <thead><tr><th>Visitor</th><th>Phone</th><th>Organization</th><th>Purpose</th><th>Check In</th><th>Status</th><th>Action</th></tr></thead>
+     <tbody id="visitorTable"></tbody>
+    </table>
+   </div>
+  </div>
+ </section>
+
+ <!-- REGISTRATION -->
+ <section id="registration" class="page hidden">
+  <div class="page-heading">
+   <div><h1>New Visitor Registration</h1><p>Enter visitor information to create a registration record.</p></div>
+  </div>
+  <div class="panel" style="max-width:850px">
+   <div class="panel-head"><div><h3>Visitor Information Form</h3><p>Fields marked * are required.</p></div></div>
+   <form id="visitorForm">
+    <div class="form-grid">
+     <div class="field">
+      <label>Full Name *</label>
+      <input id="name" required placeholder="Enter full name">
+     </div>
+     <div class="field">
+      <label>Phone Number *</label>
+      <input id="phone" required type="tel" placeholder="e.g. 0712345678">
+     </div>
+     <div class="field">
+      <label>Email Address</label>
+      <input id="email" type="email" placeholder="example@email.com">
+     </div>
+     <div class="field">
+      <label>Organization / Institution</label>
+      <input id="organization" placeholder="Enter organization">
+     </div>
+     <div class="field">
+      <label>Purpose of Visit *</label>
+      <select id="purpose" required>
+       <option value="">Select purpose</option>
+       <option>Meeting</option><option>Training</option>
+       <option>ICT Support</option><option>Event</option>
+       <option>Partnership</option><option>Official Visit</option>
+       <option>Other</option>
+      </select>
+     </div>
+     <div class="field">
+      <label>Department / Office</label>
+      <select id="department">
+       <option>General Administration</option>
+       <option>ICT Department</option>
+       <option>Programs Department</option>
+       <option>Innovation Department</option>
+       <option>Other</option>
+      </select>
+     </div>
+     <div class="field">
+      <label>Person to Visit *</label>
+      <input id="host" required placeholder="Staff member's name">
+     </div>
+     <div class="field">
+      <label>Visitor Type</label>
+      <select id="type"><option>Guest</option><option>Partner</option><option>Service Provider</option><option>Student</option><option>Official</option></select>
+     </div>
+     <div class="field full">
+      <label>Additional Notes</label>
+      <textarea id="notes" rows="3" placeholder="Any additional information..."></textarea>
+     </div>
+    </div>
+    <div class="form-actions">
+     <button type="reset" class="secondary">Clear Form</button>
+     <button type="submit" class="primary">Save Registration</button>
+    </div>
+   </form>
+  </div>
+ </section>
+
+ <!-- REPORTS -->
+ <section id="reports" class="page hidden">
+  <div class="page-heading"><div><h1>Visitor Reports</h1><p>Overview of registration and visitor activity.</p></div><button class="primary" onclick="exportCSV()">↓ Download CSV Report</button></div>
+  <div class="report-cards">
+   <div class="report-item"><p>Total registered visitors</p><h2 id="rTotal">0</h2><p>All recorded registrations</p></div>
+   <div class="report-item"><p>Currently inside</p><h2 id="rInside">0</h2><p>Visitors with active check-in</p></div>
+   <div class="report-item"><p>Today's registrations</p><h2 id="rToday">0</h2><p>Visitors registered today</p></div>
+   <div class="report-item"><p>Completed visits</p><h2 id="rOut">0</h2><p>Visitors who checked out</p></div>
+  </div>
+  <div class="note">Use the Download CSV Report button to export visitor records for further analysis in Microsoft Excel. This demonstration report uses records stored in this browser.</div>
+ </section>
+
+ <!-- SETTINGS -->
+ <section id="settings" class="page hidden">
+  <div class="page-heading"><div><h1>System Information</h1><p>About this registration application.</p></div></div>
+  <div class="panel" style="max-width:700px">
+   <h3 style="color:var(--plum);margin-bottom:17px">Application Details</h3>
+   <p style="font-size:13px;line-height:2.2">
+    <strong>System Name:</strong> Swahilipot Digital Registration System<br>
+    <strong>Application Type:</strong> Visitor Management System<br>
+    <strong>Version:</strong> 2.0<br>
+    <strong>Interface Theme:</strong> Persian Plum & Ivory Quartz<br>
+    <strong>Storage:</strong> Browser Local Storage<br>
+    <strong>Developer:</strong> ICT Attachment Project
+   </p>
+   <div class="note">This is a demonstration system. It currently stores records in the browser and does not provide a shared online database, secure user authentication or automatic backups.</div>
+   <button class="secondary" style="margin-top:18px" onclick="if(confirm('Delete ALL visitor records?')){visitors=[];save();renderAll();alert('Records cleared')}">Clear All Demo Records</button>
+  </div>
+ </section>
+
+ </div>
+ <footer>© 2026 Swahilipot Hub | Digital Registration & Visitor Management System</footer>
+</main>
+</div>
+
+<script>
+const KEY="swahilipotProfessionalVisitors";
+
+function daysAgo(days,hour=9){
+ const d=new Date();
+ d.setDate(d.getDate()-days);
+ d.setHours(hour,30,0,0);
+ return d.toISOString();
+}
+
+const samples=[
+ {id:1,name:"Amina Hassan",phone:"0700000001",email:"amina@example.com",organization:"Coast Tech Solutions",purpose:"Meeting",department:"General Administration",host:"Program Manager",type:"Partner",notes:"Partnership discussion",date:daysAgo(0,9),status:"Checked In"},
+ {id:2,name:"Brian Mwangi",phone:"0700000002",email:"brian@example.com",organization:"Mombasa Technical Institute",purpose:"Training",department:"ICT Department",host:"ICT Officer",type:"Student",notes:"Digital skills training",date:daysAgo(0,8),status:"Checked Out"},
+ {id:3,name:"Fatma Ali",phone:"0700000003",email:"fatma@example.com",organization:"Ocean Innovation Group",purpose:"Event",department:"Programs Department",host:"Events Coordinator",type:"Guest",notes:"Event coordination",date:daysAgo(1,11),status:"Checked Out"},
+ {id:4,name:"David Otieno",phone:"0700000004",email:"david@example.com",organization:"Independent",purpose:"ICT Support",department:"ICT Department",host:"ICT Officer",type:"Service Provider",notes:"Technical assistance",date:daysAgo(1,10),status:"Checked In"},
+ {id:5,name:"Grace Wanjiku",phone:"0700000005",email:"grace@example.com",organization:"Digital Kenya",purpose:"Partnership",department:"Innovation Department",host:"Project Lead",type:"Partner",notes:"Project consultation",date:daysAgo(2,13),status:"Checked Out"},
+ {id:6,name:"Peter Kamau",phone:"0700000006",email:"peter@example.com",organization:"Pwani University",purpose:"Official Visit",department:"General Administration",host:"Hub Manager",type:"Official",notes:"Official consultation",date:daysAgo(3,10),status:"Checked Out"},
+ {id:7,name:"Mary Njeri",phone:"0700000007",email:"mary@example.com",organization:"Community Group",purpose:"Meeting",department:"Programs Department",host:"Program Officer",type:"Guest",notes:"Community engagement",date:daysAgo(4,14),status:"Checked Out"},
+ {id:8,name:"John Muli",phone:"0700000008",email:"john@example.com",organization:"Mombasa County",purpose:"Partnership",department:"Innovation Department",host:"Project Lead",type:"Partner",notes:"Innovation discussion",date:daysAgo(5,9),status:"Checked Out"},
+ {id:9,name:"Salma Noor",phone:"0700000009",email:"salma@example.com",organization:"Coastal Youth Network",purpose:"Training",department:"Programs Department",host:"Training Officer",type:"Student",notes:"Training session",date:daysAgo(6,11),status:"Checked Out"}
+];
+
+let visitors=JSON.parse(localStorage.getItem(KEY));
+if(!Array.isArray(visitors)){
+ visitors=samples;
+ localStorage.setItem(KEY,JSON.stringify(visitors));
+}
+
+const $=id=>document.getElementById(id);
+const todayString=()=>new Date().toDateString();
+const save=()=>localStorage.setItem(KEY,JSON.stringify(visitors));
+const initials=name=>name.split(" ").map(x=>x[0]).slice(0,2).join("").toUpperCase();
+const formatDate=date=>new Date(date).toLocaleDateString("en-KE",{day:"2-digit",month:"short",year:"numeric"});
+const formatTime=date=>new Date(date).toLocaleTimeString("en-KE",{hour:"2-digit",minute:"2-digit"});
+
+function showPage(page){
+ document.querySelectorAll(".page").forEach(p=>p.classList.add("hidden"));
+ $(page).classList.remove("hidden");
+ document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
+ const titles={dashboard:"Dashboard Overview",visitors:"Visitor Records",registration:"New Registration",reports:"Visitor Reports",settings:"System Information"};
+ $("topTitle").textContent=titles[page];
+ if(page==="visitors")renderVisitors();
+ if(page==="reports")renderReports();
+}
+
+document.querySelectorAll(".nav button").forEach(button=>{
+ button.addEventListener("click",()=>showPage(button.dataset.page));
+});
+
+function stats(){
+ const total=visitors.length;
+ const inside=visitors.filter(v=>v.status==="Checked In").length;
+ const out=visitors.filter(v=>v.status==="Checked Out").length;
+ const today=visitors.filter(v=>new Date(v.date).toDateString()===todayString()).length;
+ $("total").textContent=total;
+ $("inside").textContent=inside;
+ $("checked").textContent=out;
+ $("today").textContent=today;
+ $("rTotal").textContent=total;
+ $("rInside").textContent=inside;
+ $("rOut").textContent=out;
+ $("rToday").textContent=today;
+}
+
+function statusBadge(status){
+ return `<span class="badge ${status==="Checked In"?"in":"out"}">${status}</span>`;
+}
+
+function renderDashboard(){
+ stats();
+ const sorted=[...visitors].sort((a,b)=>new Date(b.date)-new Date(a.date));
+ $("recentTable").innerHTML=sorted.slice(0,5).map(v=>`
+ <tr>
+ <td><div class="person"><span class="person-avatar">${initials(v.name)}</span><strong>${escapeHTML(v.name)}</strong></div></td>
+ <td>${escapeHTML(v.organization||"—")}</td>
+ <td>${escapeHTML(v.purpose)}</td>
+ <td>${formatDate(v.date)}</td>
+ <td>${statusBadge(v.status)}</td>
+ </tr>`).join("")||'<tr><td colspan="5" class="empty">No records available</td></tr>';
+
+ $("activity").innerHTML=sorted.slice(0,5).map(v=>`
+ <div class="activity">
+ <div class="activity-avatar">${initials(v.name)}</div>
+ <div class="activity-info"><strong>${escapeHTML(v.name)}</strong><small>${escapeHTML(v.purpose)} · ${escapeHTML(v.organization||"Visitor")}</small></div>
+ <span class="activity-time">${formatTime(v.date)}</span>
+ </div>`).join("")||'<p class="empty">No recent activity</p>';
+
+ renderChart();
+}
+
+function renderChart(){
+ const days=[];
+ for(let i=6;i>=0;i--){
+  const d=new Date();
+  d.setDate(d.getDate()-i);
+  days.push(d);
+ }
+ const counts=days.map(d=>visitors.filter(v=>new Date(v.date).toDateString()===d.toDateString()).length);
+ const max=Math.max(1,...counts);
+ $("chart").innerHTML=days.map((d,i)=>`
+ <div class="chart-column">
+  <div class="bar-wrap"><div class="bar ${i===6?"current":""}" title="${counts[i]} visitors" style="height:${Math.max(5,counts[i]/max*100)}%"></div></div>
+  <small>${d.toLocaleDateString("en",{weekday:"short"})}</small>
+ </div>`).join("");
+}
+
+function renderVisitors(){
+ const query=$("search").value.toLowerCase();
+ const filter=$("filter").value;
+ const list=[...visitors].sort((a,b)=>new Date(b.date)-new Date(a.date)).filter(v=>{
+  const matches=[v.name,v.phone,v.organization,v.purpose].join(" ").toLowerCase().includes(query);
+  return matches&&(filter==="All"||v.status===filter);
+ });
+ $("visitorTable").innerHTML=list.map(v=>`
+ <tr>
+ <td><div class="person"><span class="person-avatar">${initials(v.name)}</span><strong>${escapeHTML(v.name)}</strong></div></td>
+ <td>${escapeHTML(v.phone)}</td>
+ <td>${escapeHTML(v.organization||"—")}</td>
+ <td>${escapeHTML(v.purpose)}</td>
+ <td>${formatTime(v.date)}</td>
+ <td>${statusBadge(v.status)}</td>
+ <td>
+ <button class="action" onclick="toggleVisitor(${v.id})">${v.status==="Checked In"?"Check Out":"Check In"}</button>
+ <button class="action delete" onclick="deleteVisitor(${v.id})">Delete</button>
+ </td>
+ </tr>`).join("")||'<tr><td colspan="7" class="empty">No matching visitor records found.</td></tr>';
+}
+
+function renderReports(){stats()}
+
+function escapeHTML(value){
+ return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+$("visitorForm").addEventListener("submit",e=>{
+ e.preventDefault();
+ const visitor={
+  id:Date.now(),
+  name:$("name").value.trim(),
+  phone:$("phone").value.trim(),
+  email:$("email").value.trim(),
+  organization:$("organization").value.trim(),
+  purpose:$("purpose").value,
+  department:$("department").value,
+  host:$("host").value.trim(),
+  type:$("type").value,
+  notes:$("notes").value.trim(),
+  date:new Date().toISOString(),
+  status:"Checked In"
+ };
+ visitors.unshift(visitor);
+ save();
+ e.target.reset();
+ renderAll();
+ alert("Visitor successfully registered!");
+ showPage("visitors");
+});
+
+function toggleVisitor(id){
+ visitors=visitors.map(v=>{
+  if(v.id===id)v.status=v.status==="Checked In"?"Checked Out":"Checked In";
+  return v;
+ });
+ save();renderAll();renderVisitors();
+}
+
+function deleteVisitor(id){
+ if(confirm("Delete this visitor record?")){
+  visitors=visitors.filter(v=>v.id!==id);
+  save();renderAll();renderVisitors();
+ }
+}
+
+function exportCSV(){
+ const columns=["Name","Phone","Email","Organization","Purpose","Department","Person to Visit","Visitor Type","Registration Date","Status","Notes"];
+ const rows=visitors.map(v=>[v.name,v.phone,v.email,v.organization,v.purpose,v.department,v.host,v.type,v.date,v.status,v.notes]);
+ const csv=[columns,...rows].map(row=>row.map(x=>'"'+String(x??"").replace(/"/g,'""')+'"').join(",")).join("\n");
+ const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;a.download="Swahilipot_Visitor_Records.csv";a.click();
+ URL.revokeObjectURL(url);
+}
+
+$("search").addEventListener("input",renderVisitors);
+$("filter").addEventListener("change",renderVisitors);
+
+function renderAll(){
+ renderDashboard();renderVisitors();stats();
+}
+
+$("currentDate").textContent=new Date().toLocaleDateString("en-KE",{day:"numeric",month:"short",year:"numeric"});
+renderAll();
+</script>
+</body>
+</html>
